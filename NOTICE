@@ -1,0 +1,20 @@
+omlx-runtime-hardening
+Copyright 2026 yeemio
+
+This repository contains original toolkit files by yeemio and modified files
+derived from oMLX.
+
+Derived-work attribution:
+- Upstream project: oMLX
+- Upstream repository: https://github.com/nicholasgasior/omlx
+- Upstream license: Apache License 2.0
+
+Modified derivative files in this repository include:
+- patches/omlx-0.3.4/omlx/engine_pool.py
+- patches/omlx-0.3.4/omlx/process_memory_enforcer.py
+- patches/omlx-0.3.4/omlx/admin/routes.py
+- patches/omlx-0.3.4/omlx/engine/batched.py
+
+These files were modified to add swap-safe memory hardening, upgrade-survival
+tooling compatibility, and related diagnostics for the oMLX 0.3.4 runtime on
+Apple Silicon.

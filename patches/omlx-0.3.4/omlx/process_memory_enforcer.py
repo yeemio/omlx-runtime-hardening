@@ -1,4 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
+# Modified by yeemio in 2026 for swap-safe memory hardening on oMLX 0.3.4.
+# This file is a derivative work of oMLX and retains Apache-2.0 licensing.
 """
 Process-level memory enforcer for oMLX.
 

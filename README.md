@@ -2,6 +2,8 @@
 
 Runtime memory safety toolkit for [oMLX](https://github.com/nicholasgasior/omlx) on Apple Silicon.
 
+License: Apache-2.0
+
 ## Problem
 
 oMLX's multi-model switching on Apple Silicon (unified memory) has a critical gap:
@@ -138,4 +140,11 @@ If your runtime layout or version differs materially from `0.3.4`, validate firs
 
 ## License
 
-MIT
+This repository is distributed under the Apache License 2.0.
+
+It includes:
+
+- original toolkit files authored in this repo
+- modified derivative files based on `oMLX`
+
+See [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE) for attribution and redistribution details.
