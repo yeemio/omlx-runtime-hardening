@@ -1,0 +1,59 @@
+#!/bin/zsh
+set -euo pipefail
+
+# Resolve script directory for sibling tool references
+SCRIPT_DIR="${0:A:h}"
+
+BASE_DIR="${BASE_DIR:-$SCRIPT_DIR}"
+PATCH_GUARD="${PATCH_GUARD:-$BASE_DIR/patch-guard.sh}"
+PATCH_APPLIER="${PATCH_APPLIER:-$BASE_DIR/apply-full-patch.py}"
+OMLX_BIN="${OMLX_BIN:-/opt/homebrew/Cellar/omlx/0.3.4/libexec/bin/omlx}"
+OMLX_PYTHON="${OMLX_PYTHON:-/opt/homebrew/Cellar/omlx/0.3.4/libexec/bin/python}"
+
+# Build a safe PATH from common defaults. Override with SAFE_PATH env var.
+SAFE_PATH_DEFAULT="/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+SAFE_PATH="${SAFE_PATH:-$SAFE_PATH_DEFAULT}"
+
+if bash "$PATCH_GUARD" --quiet; then
+  guard_exit=0
+else
+  guard_exit=$?
+fi
+
+case "$guard_exit" in
+  0) ;;
+  2)
+    echo "oMLX version mismatch. Refusing to start with unported runtime patch." >&2
+    exit 1
+    ;;
+  3)
+    echo "swap-safe patch missing or incomplete. Attempting auto-repair..." >&2
+    apply_args=()
+    if [[ -n "${OMLX_SITE_OVERRIDE:-}" ]]; then
+      apply_args+=(--site-packages "$OMLX_SITE_OVERRIDE")
+    fi
+    python3 "$PATCH_APPLIER" "${apply_args[@]}"
+    ;;
+  *)
+    echo "Unexpected patch guard exit: $guard_exit" >&2
+    exit 1
+    ;;
+esac
+
+if ! bash "$PATCH_GUARD" --quiet; then
+  echo "Patch guard still failing after repair. Blocking oMLX startup." >&2
+  exit 1
+fi
+
+SAFE_TERM="${SAFE_TERM:-xterm-color}"
+SAFE_TMPDIR="${SAFE_TMPDIR:-${TMPDIR:-/tmp/}}"
+SAFE_LANG="${SAFE_LANG:-en_US.UTF-8}"
+
+exec env -i \
+  HOME="$HOME" \
+  PATH="$SAFE_PATH" \
+  SHELL="/bin/zsh" \
+  TERM="$SAFE_TERM" \
+  TMPDIR="$SAFE_TMPDIR" \
+  LANG="$SAFE_LANG" \
+  "$OMLX_PYTHON" -m omlx.cli serve "$@"
