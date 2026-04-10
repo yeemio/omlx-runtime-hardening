@@ -2,6 +2,9 @@
 
 Runtime memory safety toolkit for [oMLX](https://github.com/nicholasgasior/omlx) on Apple Silicon.
 
+Part of a broader local-first AI tooling stack by [yeemio](https://github.com/yeemio).
+Related public repos: [owlcc-byoscc](https://github.com/yeemio/owlcc-byoscc), [owlclaw-core](https://github.com/yeemio/owlclaw-core), [owl-github-intel](https://github.com/yeemio/owl-github-intel).
+
 License: Apache-2.0
 
 ## Problem
